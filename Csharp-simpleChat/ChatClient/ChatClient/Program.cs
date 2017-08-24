@@ -10,13 +10,10 @@ namespace ChatClient
     {
         static void Main(string[] args)
         {
-            bool enterHostName = false;
-            bool enterHostPort = false;
-
             String hostName = "";
             UInt16 hostPort = 0;
 
-            while (!enterHostName)
+            while (true)
             {
 
                 Console.Write("서버 주소 입력: ");
@@ -29,10 +26,13 @@ namespace ChatClient
                 {
                     Console.WriteLine("다시 입력하세요");
                 }
-                enterHostName = true;
+                else
+                {
+                    break;
+                }
             }
 
-            while (!enterHostPort)
+            while (true)
             {
                 Console.Write("서버 포트 입력: ");
 
@@ -40,7 +40,7 @@ namespace ChatClient
                 {
                     // 포트를 입력받고, UInt16 형으로 변환을 시도한다.
                     hostPort = UInt16.Parse(Console.ReadLine().Trim());
-                    enterHostPort = true;
+                    break;
                 }
                 catch
                 {
@@ -64,7 +64,7 @@ namespace ChatClient
             while (true)
             {
                 String msg;
-                Console.Write("보낼 메세지 (종료키: X): ");
+                Console.WriteLine("보낼 메세지 (종료키: X): ");
                 msg = Console.ReadLine().Trim();
 
                 // 입력받은 문자열이 null 인 경우, 다시 반복문의 처음으로 돌아간다.
@@ -72,7 +72,7 @@ namespace ChatClient
                     continue;
 
                 // 입력받은 문자열이 X 인 경우, 프로그램을 종료한다.
-                if (msg.Equals("X"))
+                if (msg.Equals("X") || msg.Equals("x"))
                 {
                     cc.StopClient();
                     return;

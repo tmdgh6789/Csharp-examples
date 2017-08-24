@@ -10,17 +10,19 @@ namespace ChatServer
     {
         static void Main(string[] args)
         {
-            enterHostPort:
-            UInt16 hostPort;
-            Console.Write("수신 대기할 포트 입력: ");
-            try
+            UInt16 hostPort = 0;
+            while (true)
             {
-                hostPort = UInt16.Parse(Console.ReadLine().Trim());
-            }
-            catch
-            {
-                Console.WriteLine("다시 입력하세요");
-                goto enterHostPort;
+                Console.Write("수신 대기할 포트 입력: ");
+                try
+                {
+                    hostPort = UInt16.Parse(Console.ReadLine().Trim());
+                    break;
+                }
+                catch
+                {
+                    Console.WriteLine("다시 입력하세요");
+                }
             }
 
             ChatServer cs = new ChatServer();
@@ -29,7 +31,7 @@ namespace ChatServer
             while (true)
             {
                 String msg;
-                Console.Write("보낼 메세지 (종료키: X): ");
+                Console.WriteLine("보낼 메세지 (종료키: X): ");
                 msg = Console.ReadLine().Trim();
 
                 // 입력받은 문자열이 null 인 경우, 다시 반복문의 처음으로 돌아간다.
@@ -37,7 +39,7 @@ namespace ChatServer
                     continue;
 
                 // 입력받은 문자열이 X 인 경우, 프로그램을 종료한다.
-                if (msg.Equals("X"))
+                if (msg.Equals("X") || msg.Equals("x"))
                 {
                     cs.StopServer();
                     return;
