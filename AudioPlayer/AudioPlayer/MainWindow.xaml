@@ -1,0 +1,60 @@
+﻿<Window x:Class="AudioPlayer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AudioPlayer"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    
+    <Window.DataContext>
+        <local:MainWindowViewModel/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <local:Class1 x:Key="Class1"/>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <ListView ItemsSource="{Binding Path=PlayList}" SelectedItem="{Binding Path=SelectedItem}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                            <TextBlock Width="10" Text="{Binding Path=Num}"/>
+                            <TextBlock Text="{Binding Path=Name}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5">
+            <TextBlock Text="{Binding Path=CurrentTimeStr, TargetNullValue=00:00, FallbackValue=00:00}"/>
+            <Slider Width="310" Minimum="0" Maximum="{Binding Path=Duration}" Value="{Binding Path=CurrentTime, Mode=TwoWay}" Margin="5,0,0,0"/>
+            <TextBlock Text="volume" Margin="5,0,0,0"/>
+            <Slider Width="100" Minimum="0" Maximum="1" Value="{Binding Path=Volume}" Margin="5,0,0,0"/>
+        </StackPanel>
+        
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Button Content="열기" Command="{Binding Path=OpenFileCommand}"/>
+            <Button Content="재생" Grid.Column="1" Command="{Binding Path=PlayCommand}"/>
+            <Button Content="10초" Grid.Column="2" Command="{Binding Path=TenSecondsStartCommand}"/>
+            <Button Content="일시정지" Grid.Column="3" Command="{Binding Path=PauseCommand}"/>
+            <Button Content="정지" Grid.Column="4" Command="{Binding Path=StopCommand}"/>
+        </Grid>
+    </Grid>
+</Window>
