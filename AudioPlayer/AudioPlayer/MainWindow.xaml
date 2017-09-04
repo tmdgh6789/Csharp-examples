@@ -12,7 +12,7 @@
     </Window.DataContext>
 
     <Window.Resources>
-        <local:Class1 x:Key="Class1"/>
+        <local:TotalSecondsToDoubleConverter x:Key="Class1"/>
     </Window.Resources>
     
     <Grid>
@@ -22,12 +22,20 @@
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <Grid>
-            <ListView ItemsSource="{Binding Path=PlayList}" SelectedItem="{Binding Path=SelectedItem}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5">
+                <TextBlock Width="30" Text="No." TextAlignment="Right"/>
+                <TextBlock Text="Name" TextAlignment="Center" Width="475"/>
+            </StackPanel>
+            <ListView Grid.Row="1" ItemsSource="{Binding Path=PlayList}" SelectedItem="{Binding Path=SelectedItem}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                            <TextBlock Width="10" Text="{Binding Path=Num}"/>
-                            <TextBlock Text="{Binding Path=Name}"/>
+                            <TextBlock Width="30" Text="{Binding Path=Num}" TextAlignment="Right"/>
+                            <TextBlock Text="{Binding Path=Name}" Margin="10,0,0,0"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>

@@ -16,6 +16,7 @@ namespace AudioPlayer
 {
     public class MainWindowViewModel : BindableBase
     {
+        bool mediaChanged = false;
         bool isPause = false;
         #region Property
 
@@ -46,7 +47,7 @@ namespace AudioPlayer
             }
             set
             {
-
+                mediaChanged = true;
                 m_SelectedItem = value;
                 RaisePropertyChanged("SelectedItem");
             }
@@ -118,7 +119,7 @@ namespace AudioPlayer
         }
 
 
-        private double m_Volume;
+        private double m_Volume = 0.5;
         public double Volume
         {
             get
@@ -148,8 +149,8 @@ namespace AudioPlayer
                 return new DelegateCommand(delegate ()
                 {
                     OpenFileDialog openFileDialog = new OpenFileDialog();
-                    openFileDialog.Filter = "MP3 files (*.mp3)|*.mp3|WAV files (*.wav)|*.wav|All files (*.*)|*.*";
-                
+                    openFileDialog.Filter = "MP3 files (*.mp3)|*.mp3|WAV files (*.wav)|*.wav";
+
                     if (openFileDialog.ShowDialog() == true)
                     {
                         PlayList.Add(new AudioItem() { Num = PlayList.Count + 1, Name = openFileDialog.SafeFileName, Uri = new Uri(openFileDialog.FileName) });
@@ -166,10 +167,11 @@ namespace AudioPlayer
                 {
                     if (SelectedItem != null)
                     {
-                        if (!isPause)
+                        if (!isPause || mediaChanged)
                         {
                             CurrentMedia.MediaEnded += new EventHandler(MediaEnded);
                             CurrentMedia.Open(SelectedItem.Uri);
+                            mediaChanged = false;
                         }
 
                         CurrentMedia.Play();
@@ -191,8 +193,6 @@ namespace AudioPlayer
                         thread = new Thread(UpdateLabelThreadProc);
                         thread.Start();
                     }
-                    
-
                 });
             }
         }
@@ -206,8 +206,15 @@ namespace AudioPlayer
                     if (CurrentMedia != null)
                     {
                         CurrentMedia.Stop();
-                        CurrentMedia.Position = new TimeSpan(0, 0, 10);
-                        CurrentMedia.Play();
+                        if (mediaChanged)
+                        {
+                            CurrentMedia.MediaEnded += new EventHandler(MediaEnded);
+                            CurrentMedia.Open(SelectedItem.Uri);
+                            CurrentMedia.Position = new TimeSpan(0, 0, 10);
+                            CurrentMedia.Play();
+
+                            mediaChanged = false;
+                        }
                     }
                 });
             }
@@ -237,7 +244,9 @@ namespace AudioPlayer
                     if (CurrentMedia != null)
                     {
                         CurrentMedia.Stop();
-                    }   
+                        thread.Abort();
+                        thread.Join();
+                    }
                 });
             }
         }
@@ -276,6 +285,8 @@ namespace AudioPlayer
         private void MediaEnded(object sender, EventArgs e)
         {
             isPlaying = true;
+            thread.Abort();
+            thread.Join();
         }
         #endregion
     }

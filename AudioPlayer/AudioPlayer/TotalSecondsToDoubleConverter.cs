@@ -8,7 +8,7 @@ using System.Windows.Data;
 
 namespace AudioPlayer
 {
-    public class Class1 : IValueConverter
+    public class TotalSecondsToDoubleConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
